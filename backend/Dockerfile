@@ -5,22 +5,22 @@ FROM python:3.10-slim-buster
 WORKDIR /app
 
 # 시스템에 필요한 패키지 설치
-# GeoPandas/OSMnx 사용 시 필요한 의존성 (GDAL, GEOS, PROJ 등)
-# 만약 GIS 라이브러리를 requirements.txt에 추가한다면 이 부분도 필요합니다.
+# pyproj (및 GeoPandas/OSMnx 등) 사용 시 필요한 의존성 (GDAL, GEOS, PROJ 등)
+# build-essential은 컴파일러 도구들을 제공하여 C/C++ 기반 라이브러리 빌드에 필요합니다.
+# libproj-dev, proj-bin은 pyproj의 핵심 의존성입니다.
 # RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     build-essential \
-#     libspatialindex-dev \
-#     libgdal-dev \
-#     libgeos-dev \
-#     libproj-dev \
-#     && rm -rf /var/lib/apt/lists/*
+    # apt-get install -y --no-install-recommends \
+    # build-essential \
+    # libproj-dev \
+    # proj-bin \
+    # 추가적으로 필요한 GIS 라이브러리 (예: GDAL, GEOS)가 있다면 여기에 추가
+    # libgdal-dev \
+    # libgeos-dev \
+    # && rm -rf /var/lib/apt/lists/*
 
 # requirements.txt 복사 및 의존성 설치
 COPY requirements.txt .
-RUN pip install --no-cache-dir numpy==1.26.0 pandas==2.1.1
 RUN pip install --no-cache-dir -r requirements.txt
-
 
 # 애플리케이션 코드 복사
 COPY ./app /app/app
